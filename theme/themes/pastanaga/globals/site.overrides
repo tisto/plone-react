@@ -14,3 +14,27 @@
     width: 30px;
   }
 }
+
+#main {
+  height: 100%;
+  display: flex;
+}
+
+// This is expendable with React 16
+.app-wrapper {
+  display: flex;
+  flex-grow: 1;
+}
+
+.pusher {
+  display: flex;
+  flex-direction: column;
+}
+
+.ui.basic.segment.content-area {
+  flex-grow: 1;
+}
+
+.pusher {
+  flex-grow: 1;
+}

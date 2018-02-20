@@ -81,7 +81,7 @@ export class AppComponent extends Component {
     const action = getView(this.props.pathname);
 
     return (
-      <div>
+      <div className="app-wrapper">
         <Helmet
           bodyAttributes={{
             class: `view-${action}view`,
