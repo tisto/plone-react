@@ -33,6 +33,7 @@ export Search from './theme/Search/Search';
 export SearchTags from './theme/Search/SearchTags';
 export TabularView from './theme/View/TabularView';
 export View from './theme/View/View';
+export Icon from './theme/Icon/Icon';
 
 export Actions from './manage/Actions/Actions';
 export Add from './manage/Add/Add';
