@@ -129,3 +129,20 @@
     }
   }
 }
+
+svg.circled {
+  box-sizing: content-box;
+  padding: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50px;
+}
+
+svg.icon {
+  // Experiment if this is ok for all icons
+  box-sizing: content-box;
+  padding: 6px;
+}
+
+.toolbar-edit {
+  color: @blue;
+}

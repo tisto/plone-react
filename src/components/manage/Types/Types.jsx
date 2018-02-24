@@ -9,10 +9,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { filter, map } from 'lodash';
-import { Dropdown, Icon } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 
 import { getTypes } from '../../../actions';
 import { getBaseUrl } from '../../../helpers';
+
+import { Icon } from '../../../components';
+import addSVG from '../../../icons/add-document.svg';
 
 @connect(
   state => ({
@@ -87,7 +90,7 @@ export default class Types extends Component {
       <Dropdown
         id="toolbar-add"
         item
-        trigger={<Icon size="big" name="add" />}
+        trigger={<Icon name={addSVG} size="24px" />}
         className={this.props.active ? 'active' : ''}
       >
         <Dropdown.Menu>

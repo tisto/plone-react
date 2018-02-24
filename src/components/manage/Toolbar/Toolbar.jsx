@@ -17,8 +17,19 @@ import {
   intlShape,
 } from 'react-intl';
 
-import { Actions, Display, Types, Workflow } from '../../../components';
+import {
+  Actions,
+  Display,
+  Icon as PastanagaIcon,
+  Types,
+  Workflow,
+} from '../../../components';
+
 import LogoImage from './pastanaga.svg';
+import editSVG from '../../../icons/pen.svg';
+import folderSVG from '../../../icons/folder.svg';
+import moreSVG from '../../../icons/more.svg';
+import userSVG from '../../../icons/user.svg';
 
 const messages = defineMessages({
   ploneToolbar: {
@@ -139,10 +150,10 @@ export default class Toolbar extends Component {
                   this.props.selected === 'edit' ? ' active' : ''
                 }`}
               >
-                <Icon
-                  name="write"
-                  size="big"
-                  color="blue"
+                <PastanagaIcon
+                  name={editSVG}
+                  size="24px"
+                  className="toolbar-edit circled"
                   title={this.props.intl.formatMessage(messages.edit)}
                 />
               </Link>
@@ -155,9 +166,9 @@ export default class Toolbar extends Component {
                       this.props.selected === 'contents' ? ' active' : ''
                     }`}
                   >
-                    <Icon
-                      name="folder open"
-                      size="big"
+                    <PastanagaIcon
+                      name={folderSVG}
+                      size="24px"
                       title={this.props.intl.formatMessage(messages.contents)}
                     />
                   </Link>
@@ -173,7 +184,7 @@ export default class Toolbar extends Component {
               <Dropdown
                 id="toolbar-more"
                 item
-                trigger={<Icon name="ellipsis horizontal" size="big" />}
+                trigger={<PastanagaIcon name={moreSVG} size="24px" />}
               >
                 <Dropdown.Menu>
                   <Workflow pathname={this.props.pathname} />
@@ -207,7 +218,7 @@ export default class Toolbar extends Component {
                 className="personal-bar"
                 item
                 upward
-                trigger={<Icon name="user" size="big" />}
+                trigger={<PastanagaIcon name={userSVG} size="24px" />}
               >
                 <Dropdown.Menu>
                   <Link to="/personal-preferences" className="item">
