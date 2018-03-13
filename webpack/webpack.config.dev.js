@@ -11,7 +11,7 @@ const assetsPath = path.resolve(__dirname, '../dist');
 const host = 'localhost';
 const port = process.env.PORT || 4301;
 
-const babelrc = fs.readFileSync('./.babelrc');
+const babelrc = fs.readFileSync('./node_modules/@plone/plone-react/.babelrc');
 let babelrcObject = {};
 
 try {
