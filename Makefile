@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 CURRENT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-all: clean tests/bin test
+all: tests/bin test
 
 clean:
 	@echo "Clean"
