@@ -5,20 +5,23 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { Button, Divider, Menu } from 'semantic-ui-react';
 import jwtDecode from 'jwt-decode';
 import cookie from 'react-cookie';
-import { injectIntl } from 'react-intl';
 
-import LogoImage from './pastanaga.svg';
+import { Icon } from '../../../components';
+import pastanagaSmall from './pastanaga-small.svg';
+import pastanagalogo from './pastanaga.svg';
 
-@injectIntl
+import penSVG from '../../../icons/pen.svg';
+import folderSVG from '../../../icons/folder.svg';
+import addSVG from '../../../icons/add-document.svg';
+import moreSVG from '../../../icons/more.svg';
+import userSVG from '../../../icons/user.svg';
+
 @connect(state => ({
   token: state.userSession.token,
-  fullname: state.userSession.token
-    ? jwtDecode(state.userSession.token).fullname
-    : '',
   content: state.content.data,
 }))
 /**
@@ -26,7 +29,7 @@ import LogoImage from './pastanaga.svg';
  * @class Toolbar
  * @extends Component
  */
-export default class Toolbar extends Component {
+class Toolbar extends Component {
   /**
    * Property types.
    * @property {Object} propTypes Property types.
@@ -52,34 +55,79 @@ export default class Toolbar extends Component {
     content: null,
   };
 
-  /**
-   * Constructor
-   * @method constructor
-   * @param {Object} props Component properties
-   * @constructs Toolbar
-   */
-  constructor(props) {
-    super(props);
-    this.onToggleExpanded = this.onToggleExpanded.bind(this);
-    this.state = {
-      expanded: cookie.load('toolbar_expanded') !== 'false',
-    };
-  }
+  state = {
+    expanded: cookie.load('toolbar_expanded') !== 'false',
+    showMenu: false,
+    menuStyle: {},
+    menuComponents: [],
+  };
 
-  /**
-   * On toggle expanded handler
-   * @method onToggleExpanded
-   * @returns {undefined}
-   */
-  onToggleExpanded() {
+  handleShrink = () => {
     cookie.save('toolbar_expanded', !this.state.expanded, {
       expires: new Date((2 ** 31 - 1) * 1000),
       path: '/',
     });
-    this.setState({
-      expanded: !this.state.expanded,
-    });
-  }
+    this.setState(state => ({ expanded: !state.expanded }));
+  };
+
+  closeMenu = () =>
+    this.setState(() => ({ showMenu: false, menuComponents: [] }));
+
+  loadComponent = type => {
+    const { menuComponents } = this.state;
+    const nextIndex = menuComponents.length;
+
+    if (
+      !this.state.menuComponents.reduce(
+        (prev, current) => prev && current.name === `${type}`,
+        false,
+      )
+    ) {
+      import(`./${type}.jsx`).then(LoadedComponent =>
+        this.setState(state => ({
+          menuComponents: state.menuComponents.concat({
+            name: `${type}`,
+            component: (
+              <LoadedComponent.default
+                loadComponent={this.loadComponent}
+                unloadComponent={this.unloadComponent}
+                componentIndex={nextIndex}
+                theToolbar={this.theToolbar}
+                key={`menucomp-${nextIndex}`}
+              />
+            ),
+          }),
+        })),
+      );
+    }
+  };
+
+  unloadComponent = () => {
+    this.setState(state => ({
+      menuComponents: state.menuComponents.slice(0, -1),
+    }));
+  };
+
+  toggleMenu = (e, selector) => {
+    if (this.state.showMenu) {
+      this.closeMenu();
+      return;
+    }
+    // PersonalTools always shows at bottom
+    if (selector === 'PersonalTools') {
+      this.setState(state => ({
+        showMenu: !state.showMenu,
+        menuStyle: { bottom: 0 },
+      }));
+    } else {
+      const elemOffsetTop = e.target.getBoundingClientRect().top;
+      this.setState(state => ({
+        showMenu: !state.showMenu,
+        menuStyle: { top: `${elemOffsetTop}px` },
+      }));
+    }
+    this.loadComponent(selector);
+  };
 
   /**
    * Render method.
@@ -87,38 +135,73 @@ export default class Toolbar extends Component {
    * @returns {string} Markup for the component.
    */
   render() {
-    const { expanded } = this.state;
-
     return (
       this.props.token && (
         <Fragment>
-          <Menu
-            vertical
-            borderless
-            icon
-            fixed="left"
-            className={!expanded ? 'collapsed' : ''}
+          <div
+            style={this.state.menuStyle}
+            className={
+              this.state.showMenu ? 'toolbar-content show' : 'toolbar-content'
+            }
+            ref={toolbar => {
+              this.theToolbar = toolbar;
+            }}
           >
-            {this.props.inner}
-            <Menu.Item className="logo">
-              <Divider />
-              <div
-                className="image"
-                style={{ backgroundImage: `url(${LogoImage})` }}
-              />
-            </Menu.Item>
-            <Button
-              className={
-                this.props.content && this.props.content.review_state
-                  ? `${this.props.content.review_state} trigger`
-                  : 'trigger'
-              }
-              onClick={this.onToggleExpanded}
-            />
-          </Menu>
-          <div className={this.state.expanded ? 'pusher expanded' : 'pusher'} />
+            <div
+              className="pusher-puller"
+              style={{
+                left: `-${(this.state.menuComponents.length - 1) * 100}%`,
+              }}
+            >
+              {this.state.menuComponents.map(component => (
+                <Fragment key={component.name}>{component.component}</Fragment>
+              ))}
+            </div>
+          </div>
+          <div className={this.state.expanded ? 'toolbar expanded' : 'toolbar'}>
+            <div className="toolbar-body">
+              <div className="toolbar-actions">
+                <Link className="edit" to="/edit">
+                  <Icon name={penSVG} size="36px" className="circled" />
+                </Link>
+                <Link to="/contents">
+                  <Icon name={folderSVG} size="36px" />
+                </Link>
+                <Link to="/add-menu">
+                  <Icon name={addSVG} size="36px" />
+                </Link>
+                <button
+                  className="more"
+                  onClick={e => this.toggleMenu(e, 'More')}
+                  tabIndex={0}
+                >
+                  <Icon name={moreSVG} size="36px" />
+                </button>
+              </div>
+              <div className="toolbar-bottom">
+                <img className="minipastanaga" src={pastanagaSmall} alt="" />
+                <button
+                  className="user"
+                  onClick={e => this.toggleMenu(e, 'PersonalTools')}
+                  tabIndex={0}
+                >
+                  <Icon name={userSVG} size="36px" />
+                </button>
+                <div className="divider" />
+                <div className="pastanagalogo">
+                  <img src={pastanagalogo} alt="" />
+                </div>
+              </div>
+            </div>
+            <div className="toolbar-handler">
+              <button onClick={this.handleShrink} />
+            </div>
+          </div>
+          <div className="pusher" />
         </Fragment>
       )
     );
   }
 }
+
+export default Toolbar;
