@@ -90,7 +90,7 @@ svg.icon {
 
   &-content {
     overflow: hidden;
-    overflow-y: scroll;
+    // overflow-y: scroll;
     max-height: 0;
     opacity: 0;
     background-color: #fff;
@@ -297,7 +297,7 @@ svg.icon {
     }
 
     &-content {
-      position: absolute;
+      position: fixed;
       left: 84px;
       width: 320px;
       // top: 228px; // (for .more)
@@ -395,7 +395,7 @@ svg.icon {
     justify-content: space-between;
     align-items: center;
     border-bottom: 4px solid @silver-blue;
-    height: 44px;
+    height: 60px;
 
     h2 {
       font-size: 16px;
@@ -428,13 +428,15 @@ svg.icon {
     display: flex;
     flex-direction: column;
     list-style: none;
-    padding: 10px 20px;
+    padding: 2px 20px;
     justify-content: center;
     margin-top: 0;
   }
 
   li {
-    // padding: 5px 0;
+    height: 38px;
+    display: flex;
+    align-items: center;
 
     button {
       font-family: Poppins;
@@ -494,9 +496,10 @@ svg.icon {
       color: #878f93;
       display: flex;
       list-style: none;
-      padding: 15px 0;
-      justify-content: center;
+      padding: 0;
+      justify-content: space-around;
       margin: 0;
+      height: 80px;
     }
 
     li {
@@ -504,7 +507,7 @@ svg.icon {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 0 10px;
+      padding: 0;
 
       span:first-child {
         font-size: 30px;
