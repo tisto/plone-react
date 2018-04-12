@@ -48,6 +48,9 @@ class More extends Component {
         </header>
         <div className="pastanaga-menu-list">
           <ul>
+            <li className="state-select">
+              <Workflow pathname={path} />
+            </li>
             <li className="display-select">
               <Display pathname={path} />
             </li>
