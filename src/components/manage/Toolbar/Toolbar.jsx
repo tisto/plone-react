@@ -20,9 +20,10 @@ import addSVG from '../../../icons/add-document.svg';
 import moreSVG from '../../../icons/more.svg';
 import userSVG from '../../../icons/user.svg';
 
-@connect(state => ({
+@connect((state, props) => ({
   token: state.userSession.token,
   content: state.content.data,
+  pathname: props.pathname,
 }))
 /**
  * Toolbar container class.
@@ -37,6 +38,7 @@ class Toolbar extends Component {
    */
   static propTypes = {
     token: PropTypes.string,
+    pathname: PropTypes.string.isRequired,
     content: PropTypes.shape({
       '@type': PropTypes.string,
       is_folderish: PropTypes.bool,
@@ -89,6 +91,7 @@ class Toolbar extends Component {
             name: `${type}`,
             component: (
               <LoadedComponent.default
+                pathname={this.props.pathname}
                 loadComponent={this.loadComponent}
                 unloadComponent={this.unloadComponent}
                 componentIndex={nextIndex}

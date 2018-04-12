@@ -1,17 +1,15 @@
-/**
- * Display component.
- * @module components/manage/Display/Display
- */
-
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Dropdown, Icon } from 'semantic-ui-react';
 import { FormattedMessage } from 'react-intl';
-
+import Select from 'react-select';
 import { getSchema, editContent, getContent } from '../../../actions';
 import layouts from '../../../constants/Layouts';
+import { Icon } from '../../../components';
+import downSVG from '../../../icons/down-key.svg';
+import upSVG from '../../../icons/up-key.svg';
+import checkSVG from '../../../icons/check.svg';
 
 @connect(
   state => ({
@@ -28,7 +26,7 @@ import layouts from '../../../constants/Layouts';
  * @class Display
  * @extends Component
  */
-export default class Display extends Component {
+class DisplaySelect extends Component {
   /**
    * Property types.
    * @property {Object} propTypes Property types.
@@ -51,22 +49,16 @@ export default class Display extends Component {
    * @static
    */
   static defaultProps = {
-    history: [],
-    transitions: [],
     layouts: [],
     layout: '',
   };
 
-  /**
-   * Constructor
-   * @method constructor
-   * @param {Object} props Component properties
-   * @constructs Workflow
-   */
-  constructor(props) {
-    super(props);
-    this.setLayout = this.setLayout.bind(this);
-  }
+  state = {
+    selectedOption: {
+      value: this.props.layout,
+      label: layouts[this.props.layout],
+    },
+  };
 
   /**
    * Component will mount
@@ -98,41 +90,59 @@ export default class Display extends Component {
    * @param {Object} event Event object
    * @returns {undefined}
    */
-  setLayout(event, { value }) {
+  setLayout = selectedOption => {
     this.props.editContent(this.props.pathname, {
-      layout: value,
+      layout: selectedOption.value,
     });
-  }
+    this.setState({ selectedOption });
+  };
 
-  /**
-   * Render method.
-   * @method render
-   * @returns {string} Markup for the component.
-   */
+  selectValue = option => (
+    <Fragment>
+      <span className="Select-value-label">{option.label}</span>
+    </Fragment>
+  );
+
+  optionRenderer = option => (
+    <Fragment>
+      <span style={{ marginRight: 'auto' }}>{option.label}</span>
+      <Icon name={checkSVG} size="24px" />
+    </Fragment>
+  );
+
   render() {
+    const { selectedOption } = this.state;
+    const value = selectedOption && selectedOption.value;
+
     return (
-      <Dropdown
-        item
-        id="toolbar-display"
-        trigger={
-          <span>
-            <Icon name="block layout" size="big" />{' '}
-            <FormattedMessage id="Display" defaultMessage="Display" />
-          </span>
-        }
-      >
-        <Dropdown.Menu>
-          {this.props.layouts.map(item => (
-            <Dropdown.Item
-              text={layouts[item] || item}
-              value={item}
-              active={this.props.layout === item}
-              key={item}
-              onClick={this.setLayout}
-            />
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+      <Fragment>
+        <label htmlFor="display-select">View</label>
+        <Select
+          name="state-select"
+          arrowRenderer={({ onMouseDown, isOpen }) =>
+            isOpen ? (
+              <Icon name={upSVG} size="24px" />
+            ) : (
+              <Icon name={downSVG} size="24px" />
+            )
+          }
+          clearable={false}
+          searchable={false}
+          // onBlur={() => {
+          //   debugger;
+          // }}
+          value={value}
+          onChange={this.setLayout}
+          options={this.props.layouts.map(item => ({
+            value: item,
+            label: layouts[item] || item,
+          }))}
+          valueRenderer={this.selectValue}
+          optionRenderer={this.optionRenderer}
+        />
+      </Fragment>
     );
   }
 }
+
+export default DisplaySelect;

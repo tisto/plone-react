@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Icon, Display, Workflow } from '../../../components';
 import rightArrowSVG from '../../../icons/right-key.svg';
 import userSVG from '../../../icons/user.svg';
 
+import { getBaseUrl } from '../../../helpers';
+
+@connect(
+  (state, props) => ({
+    pathname: props.pathname,
+  }),
+  {},
+)
 class More extends Component {
   static propTypes = {
+    pathname: PropTypes.string.isRequired,
     loadComponent: PropTypes.func.isRequired,
     componentIndex: PropTypes.number.isRequired,
   };
@@ -18,6 +28,7 @@ class More extends Component {
   };
 
   render() {
+    const path = getBaseUrl(this.props.pathname);
     return (
       <div
         className="menu-more pastanaga-menu"
@@ -37,11 +48,8 @@ class More extends Component {
         </header>
         <div className="pastanaga-menu-list">
           <ul>
-            <li className="state-select">
-              <Workflow />
-            </li>
             <li className="display-select">
-              <Display />
+              <Display pathname={path} />
             </li>
             <li>
               <button onClick={() => this.push('History')}>
