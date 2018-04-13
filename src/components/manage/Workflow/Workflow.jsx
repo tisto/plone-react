@@ -170,6 +170,7 @@ export default class Workflow extends Component {
             )
           }
           clearable={false}
+          disabled={!this.props.content.review_state}
           searchable={false}
           // onBlur={() => {
           //   debugger;
