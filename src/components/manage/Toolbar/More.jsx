@@ -10,14 +10,30 @@ import { getBaseUrl } from '../../../helpers';
 @connect(
   (state, props) => ({
     pathname: props.pathname,
+    content: state.content.data,
   }),
   {},
 )
 class More extends Component {
   static propTypes = {
     pathname: PropTypes.string.isRequired,
+    content: PropTypes.shape({
+      title: PropTypes.string,
+      '@type': PropTypes.string,
+      is_folderish: PropTypes.bool,
+      review_state: PropTypes.string,
+    }),
     loadComponent: PropTypes.func.isRequired,
     componentIndex: PropTypes.number.isRequired,
+  };
+
+  /**
+   * Default properties.
+   * @property {Object} defaultProps Default properties.
+   * @static
+   */
+  static defaultProps = {
+    content: null,
   };
 
   push = selector => {
@@ -37,7 +53,7 @@ class More extends Component {
         }}
       >
         <header>
-          <h2>Title of the content</h2>
+          <h2>{this.props.content.title}</h2>
           <button
             className="more-user"
             onClick={() => this.push('PersonalTools')}
