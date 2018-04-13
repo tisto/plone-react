@@ -171,6 +171,9 @@ export default class Workflow extends Component {
           }
           clearable={false}
           disabled={!this.props.content.review_state}
+          placeholder={
+            this.props.content.review_state ? 'Select...' : 'No workflow'
+          }
           searchable={false}
           // onBlur={() => {
           //   debugger;
