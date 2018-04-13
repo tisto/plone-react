@@ -1,17 +1,56 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import jwtDecode from 'jwt-decode';
+
 import { Icon } from '../../../components';
 
+import { getUser } from '../../../actions';
 import logoutSVG from '../../../icons/log-out.svg';
 import rightArrowSVG from '../../../icons/right-key.svg';
 import avatar from './avatar.jpg';
 
+@connect(
+  state => ({
+    user: state.users.user,
+    loaded: state.users.get.loaded,
+    loading: state.users.edit.loading,
+    userId: state.userSession.token
+      ? jwtDecode(state.userSession.token).sub
+      : '',
+  }),
+  { getUser },
+)
 class PersonalTools extends Component {
+  /**
+   * Property types.
+   * @property {Object} propTypes Property types.
+   * @static
+   */
   static propTypes = {
+    user: PropTypes.shape({
+      fullname: PropTypes.string,
+      email: PropTypes.string,
+      home_page: PropTypes.string,
+      location: PropTypes.string,
+    }).isRequired,
+    userId: PropTypes.string.isRequired,
+    getUser: PropTypes.func.isRequired,
+    loaded: PropTypes.bool.isRequired,
+    loading: PropTypes.bool,
     loadComponent: PropTypes.func.isRequired,
     componentIndex: PropTypes.number.isRequired,
   };
+
+  /**
+   * Component will mount
+   * @method componentWillMount
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    this.props.getUser(this.props.userId);
+  }
 
   push = selector => {
     this.setState(() => ({
@@ -29,7 +68,7 @@ class PersonalTools extends Component {
         }}
       >
         <header className="header">
-          <h2>Víctor Fernández de Alba</h2>
+          <h2>{this.props.user.fullname}</h2>
           <Link to="/logout">
             <Icon name={logoutSVG} size="36px" />
           </Link>
