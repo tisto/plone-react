@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { find } from 'lodash';
+
 import { Icon, Display, Workflow } from '../../../components';
 import rightArrowSVG from '../../../icons/right-key.svg';
 import userSVG from '../../../icons/user.svg';
@@ -9,6 +12,7 @@ import { getBaseUrl } from '../../../helpers';
 
 @connect(
   (state, props) => ({
+    actions: state.actions.actions,
     pathname: props.pathname,
     content: state.content.data,
   }),
@@ -16,6 +20,11 @@ import { getBaseUrl } from '../../../helpers';
 )
 class More extends Component {
   static propTypes = {
+    actions: PropTypes.shape({
+      object: PropTypes.arrayOf(PropTypes.object),
+      object_buttons: PropTypes.arrayOf(PropTypes.object),
+      user: PropTypes.arrayOf(PropTypes.object),
+    }),
     pathname: PropTypes.string.isRequired,
     content: PropTypes.shape({
       title: PropTypes.string,
@@ -33,6 +42,7 @@ class More extends Component {
    * @static
    */
   static defaultProps = {
+    actions: null,
     content: null,
   };
 
@@ -45,6 +55,10 @@ class More extends Component {
 
   render() {
     const path = getBaseUrl(this.props.pathname);
+    const historyAction = find(this.props.actions.object, { id: 'history' });
+    const sharingAction = find(this.props.actions.object, {
+      id: 'local_roles',
+    });
     return (
       <div
         className="menu-more pastanaga-menu"
@@ -71,19 +85,37 @@ class More extends Component {
               <Display pathname={path} />
             </li>
             <li>
-              <button onClick={() => this.push('History')}>
-                <div>
-                  <span className="pastanaga-menu-label">Modified</span>
-                  <span className="pastanaga-menu-value">6 days ago</span>
-                </div>
-                <Icon name={rightArrowSVG} size="24px" />
-              </button>
+              {historyAction ? (
+                <button onClick={() => this.push('History')}>
+                  <div>
+                    <span className="pastanaga-menu-label">
+                      {historyAction.title}
+                    </span>
+                    <span className="pastanaga-menu-value">6 days ago</span>
+                  </div>
+                  <Icon name={rightArrowSVG} size="24px" />
+                </button>
+              ) : (
+                <button>
+                  <div>
+                    <span className="pastanaga-menu-label">
+                      {historyAction.title}
+                    </span>
+                    <span className="pastanaga-menu-value">6 days ago</span>
+                  </div>
+                </button>
+              )}
             </li>
-            <li>
-              <button onClick={() => this.push('Sharing')}>
-                Grant Access<Icon name={rightArrowSVG} size="24px" />
-              </button>
-            </li>
+            {sharingAction && (
+              <li>
+                <Link to={`${path}/sharing`}>
+                  <button>
+                    {sharingAction.title}
+                    <Icon name={rightArrowSVG} size="24px" />
+                  </button>
+                </Link>
+              </li>
+            )}
             <li>
               <button onClick={() => this.push('Portlets')}>
                 Portlets<Icon name={rightArrowSVG} size="24px" />

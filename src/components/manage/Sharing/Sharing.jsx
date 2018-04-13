@@ -27,9 +27,10 @@ import {
   intlShape,
 } from 'react-intl';
 
+import backSVG from '../../../icons/back.svg';
 import { editSharing, getSharing } from '../../../actions';
 import { getBaseUrl } from '../../../helpers';
-import { Toolbar } from '../../../components';
+import { Icon as IconNext, Toolbar } from '../../../components';
 
 const messages = defineMessages({
   searchForUserOrGroup: {
@@ -396,12 +397,13 @@ export default class SharingComponent extends Component {
         <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
           <Toolbar
             pathname={this.props.pathname}
+            hideDefaultViewButtons
             inner={
               <Link to={`${getBaseUrl(this.props.pathname)}`} className="item">
-                <Icon
-                  name="arrow left"
-                  size="big"
-                  color="blue"
+                <IconNext
+                  name={backSVG}
+                  className="contents circled"
+                  size="36px"
                   title={this.props.intl.formatMessage(messages.back)}
                 />
               </Link>

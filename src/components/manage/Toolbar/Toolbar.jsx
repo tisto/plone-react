@@ -7,12 +7,15 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import jwtDecode from 'jwt-decode';
 import cookie from 'react-cookie';
+import { find } from 'lodash';
+
+import { getActions } from '../../../actions';
 
 import { Icon } from '../../../components';
 import pastanagaSmall from './pastanaga-small.svg';
 import pastanagalogo from './pastanaga.svg';
+import { getBaseUrl } from '../../../helpers';
 
 import penSVG from '../../../icons/pen.svg';
 import folderSVG from '../../../icons/folder.svg';
@@ -20,11 +23,15 @@ import addSVG from '../../../icons/add-document.svg';
 import moreSVG from '../../../icons/more.svg';
 import userSVG from '../../../icons/user.svg';
 
-@connect((state, props) => ({
-  token: state.userSession.token,
-  content: state.content.data,
-  pathname: props.pathname,
-}))
+@connect(
+  (state, props) => ({
+    actions: state.actions.actions,
+    token: state.userSession.token,
+    content: state.content.data,
+    pathname: props.pathname,
+  }),
+  { getActions },
+)
 /**
  * Toolbar container class.
  * @class Toolbar
@@ -37,6 +44,11 @@ class Toolbar extends Component {
    * @static
    */
   static propTypes = {
+    actions: PropTypes.shape({
+      object: PropTypes.arrayOf(PropTypes.object),
+      object_buttons: PropTypes.arrayOf(PropTypes.object),
+      user: PropTypes.arrayOf(PropTypes.object),
+    }),
     token: PropTypes.string,
     pathname: PropTypes.string.isRequired,
     content: PropTypes.shape({
@@ -44,7 +56,9 @@ class Toolbar extends Component {
       is_folderish: PropTypes.bool,
       review_state: PropTypes.string,
     }),
+    getActions: PropTypes.func.isRequired,
     inner: PropTypes.element.isRequired,
+    hideDefaultViewButtons: PropTypes.bool,
   };
 
   /**
@@ -53,8 +67,10 @@ class Toolbar extends Component {
    * @static
    */
   static defaultProps = {
+    actions: null,
     token: null,
     content: null,
+    hideDefaultViewButtons: false,
   };
 
   state = {
@@ -63,6 +79,34 @@ class Toolbar extends Component {
     menuStyle: {},
     menuComponents: [],
   };
+
+  /**
+   * Component will mount
+   * @method componentDidMount
+   * @returns {undefined}
+   */
+  componentDidMount() {
+    this.props.getActions(this.props.pathname);
+  }
+
+  /**
+   * Component will receive props
+   * @method componentWillReceiveProps
+   * @param {Object} nextProps Next properties
+   * @returns {undefined}
+   */
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.pathname !== this.props.pathname) {
+      this.props.getActions(nextProps.pathname);
+    }
+
+    // if (nextProps.actions.object_buttons) {
+    //   const objectButtons = nextProps.actions.object_buttons;
+    //   this.setState({
+    //     hasObjectButtons: !!objectButtons.length,
+    //   });
+    // }
+  }
 
   handleShrink = () => {
     cookie.save('toolbar_expanded', !this.state.expanded, {
@@ -138,6 +182,12 @@ class Toolbar extends Component {
    * @returns {string} Markup for the component.
    */
   render() {
+    const path = getBaseUrl(this.props.pathname);
+    const editAction = find(this.props.actions.object, { id: 'edit' });
+    const folderContentsAction = find(this.props.actions.object, {
+      id: 'folderContents',
+    });
+
     return (
       this.props.token && (
         <Fragment>
@@ -164,32 +214,49 @@ class Toolbar extends Component {
           <div className={this.state.expanded ? 'toolbar expanded' : 'toolbar'}>
             <div className="toolbar-body">
               <div className="toolbar-actions">
-                <Link className="edit" to="/edit">
-                  <Icon name={penSVG} size="36px" className="circled" />
-                </Link>
-                <Link to="/contents">
-                  <Icon name={folderSVG} size="36px" />
-                </Link>
-                <Link to="/add-menu">
-                  <Icon name={addSVG} size="36px" />
-                </Link>
-                <button
-                  className="more"
-                  onClick={e => this.toggleMenu(e, 'More')}
-                  tabIndex={0}
-                >
-                  <Icon name={moreSVG} size="36px" />
-                </button>
+                {this.props.hideDefaultViewButtons &&
+                  this.props.inner && <Fragment>{this.props.inner}</Fragment>}
+                {!this.props.hideDefaultViewButtons && (
+                  <Fragment>
+                    {editAction && (
+                      <Link className="edit" to={`${path}/edit`}>
+                        <Icon name={penSVG} size="36px" className="circled" />
+                      </Link>
+                    )}
+                    {this.props.content &&
+                      this.props.content.is_folderish &&
+                      folderContentsAction && (
+                        <Link to="/contents">
+                          <Icon name={folderSVG} size="36px" />
+                        </Link>
+                      )}
+                    {this.props.content &&
+                      this.props.content.is_folderish && (
+                        <Link to="/add?type=document">
+                          <Icon name={addSVG} size="36px" />
+                        </Link>
+                      )}
+                    <button
+                      className="more"
+                      onClick={e => this.toggleMenu(e, 'More')}
+                      tabIndex={0}
+                    >
+                      <Icon name={moreSVG} size="36px" />
+                    </button>
+                  </Fragment>
+                )}
               </div>
               <div className="toolbar-bottom">
                 <img className="minipastanaga" src={pastanagaSmall} alt="" />
-                <button
-                  className="user"
-                  onClick={e => this.toggleMenu(e, 'PersonalTools')}
-                  tabIndex={0}
-                >
-                  <Icon name={userSVG} size="36px" />
-                </button>
+                {!this.props.hideDefaultViewButtons && (
+                  <button
+                    className="user"
+                    onClick={e => this.toggleMenu(e, 'PersonalTools')}
+                    tabIndex={0}
+                  >
+                    <Icon name={userSVG} size="36px" />
+                  </button>
+                )}
                 <div className="divider" />
                 <div className="pastanagalogo">
                   <img src={pastanagalogo} alt="" />

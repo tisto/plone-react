@@ -20,8 +20,9 @@ import {
 } from 'react-intl';
 
 import Icons from '../../../constants/ControlpanelIcons';
+import backSVG from '../../../icons/back.svg';
 import { getControlpanels } from '../../../actions';
-import { Toolbar } from '../../../components';
+import { Icon as IconNext, Toolbar } from '../../../components';
 import { getBaseUrl } from '../../../helpers';
 
 const messages = defineMessages({
@@ -132,12 +133,13 @@ export default class Controlpanels extends Component {
         <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
           <Toolbar
             pathname={this.props.pathname}
+            hideDefaultViewButtons
             inner={
               <Link to={`${getBaseUrl(this.props.pathname)}`} className="item">
-                <Icon
-                  name="arrow left"
-                  size="big"
-                  color="blue"
+                <IconNext
+                  name={backSVG}
+                  className="contents circled"
+                  size="36px"
                   title={this.props.intl.formatMessage(messages.back)}
                 />
               </Link>

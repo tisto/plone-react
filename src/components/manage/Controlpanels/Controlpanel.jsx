@@ -10,10 +10,11 @@ import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import Helmet from 'react-helmet';
 import { Portal } from 'react-portal';
-import { Icon, Container } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 
-import { Form, Toolbar } from '../../../components';
+import { Form, Icon, Toolbar } from '../../../components';
+import backSVG from '../../../icons/back.svg';
 import {
   addMessage,
   editControlpanel,
@@ -164,15 +165,16 @@ export default class Controlpanel extends Component {
           <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
             <Toolbar
               pathname={this.props.pathname}
+              hideDefaultViewButtons
               inner={
                 <Link
                   to={`${getBaseUrl(this.props.pathname)}controlpanel`}
                   className="item"
                 >
                   <Icon
-                    name="arrow left"
-                    size="big"
-                    color="blue"
+                    name={backSVG}
+                    className="contents circled"
+                    size="36px"
                     title={this.props.intl.formatMessage(messages.back)}
                   />
                 </Link>

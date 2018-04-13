@@ -13,9 +13,13 @@ import { asyncConnect } from 'redux-connect';
 import { isEmpty, pick } from 'lodash';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { Portal } from 'react-portal';
-import { Icon } from 'semantic-ui-react';
 
-import { Form, Toolbar } from '../../../components';
+import saveSVG from '../../../icons/save.svg';
+import clearSVG from '../../../icons/clear.svg';
+import showBlocksSVG from '../../../icons/show-blocks.svg';
+import columnSVG from '../../../icons/column.svg';
+
+import { Form, Icon, Toolbar } from '../../../components';
 import { editContent, getContent, getSchema } from '../../../actions';
 import { getBaseUrl } from '../../../helpers';
 
@@ -228,35 +232,39 @@ export class EditComponent extends Component {
           <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
             <Toolbar
               pathname={this.props.pathname}
+              hideDefaultViewButtons
               inner={
                 <div>
-                  <a className="item" onClick={() => this.form.onSubmit()}>
+                  <button className="save" onClick={() => this.form.onSubmit()}>
                     <Icon
-                      name="save"
-                      size="big"
-                      color="blue"
+                      name={saveSVG}
+                      className="circled"
+                      size="36px"
                       title={this.props.intl.formatMessage(messages.save)}
                     />
-                  </a>
-                  <a className="item" onClick={() => this.onToggleVisual()}>
+                  </button>
+                  <button
+                    className="item"
+                    onClick={() => this.onToggleVisual()}
+                  >
                     <Icon
-                      name={this.state.visual ? 'tasks' : 'block layout'}
-                      size="big"
+                      name={this.state.visual ? columnSVG : showBlocksSVG}
+                      size="36px"
                       title={this.props.intl.formatMessage(
                         this.state.visual
                           ? messages.properties
                           : messages.visual,
                       )}
                     />
-                  </a>
-                  <a className="item" onClick={() => this.onCancel()}>
+                  </button>
+                  <button className="cancel" onClick={() => this.onCancel()}>
                     <Icon
-                      name="close"
-                      size="big"
-                      color="red"
+                      name={clearSVG}
+                      className="circled"
+                      size="36px"
                       title={this.props.intl.formatMessage(messages.cancel)}
                     />
-                  </a>
+                  </button>
                 </div>
               }
             />

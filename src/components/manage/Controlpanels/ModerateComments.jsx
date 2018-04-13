@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 import { Portal } from 'react-portal';
-import { Icon, Button, Table } from 'semantic-ui-react';
+import { Button, Table } from 'semantic-ui-react';
 import moment from 'moment';
 import {
   FormattedMessage,
@@ -19,8 +19,9 @@ import {
   intlShape,
 } from 'react-intl';
 
+import backSVG from '../../../icons/back.svg';
 import { deleteComment, searchContent } from '../../../actions';
-import { Toolbar, CommentEditModal } from '../../../components';
+import { Icon, Toolbar, CommentEditModal } from '../../../components';
 import { getBaseUrl } from '../../../helpers';
 
 const messages = defineMessages({
@@ -265,15 +266,16 @@ export default class ModerateComments extends Component {
         <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
           <Toolbar
             pathname={this.props.pathname}
+            hideDefaultViewButtons
             inner={
               <Link
                 to={`${getBaseUrl(this.props.pathname)}controlpanel`}
                 className="item"
               >
                 <Icon
-                  name="arrow left"
-                  size="big"
-                  color="blue"
+                  name={backSVG}
+                  className="contents circled"
+                  size="36px"
                   title={this.props.intl.formatMessage(messages.back)}
                 />
               </Link>

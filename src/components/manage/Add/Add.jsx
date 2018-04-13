@@ -13,10 +13,11 @@ import { asyncConnect } from 'redux-connect';
 import { isEmpty, pick } from 'lodash';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { Portal } from 'react-portal';
-import { Icon } from 'semantic-ui-react';
 
+import saveSVG from '../../../icons/save.svg';
+import clearSVG from '../../../icons/clear.svg';
 import { addContent, getSchema } from '../../../actions';
-import { Form, Toolbar } from '../../../components';
+import { Form, Icon, Toolbar } from '../../../components';
 import config from '../../../config';
 import { getBaseUrl } from '../../../helpers';
 
@@ -177,24 +178,25 @@ export class AddComponent extends Component {
           <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
             <Toolbar
               pathname={this.props.pathname}
+              hideDefaultViewButtons
               inner={
                 <div>
-                  <a className="item" icon onClick={() => this.form.onSubmit()}>
+                  <button className="save" onClick={() => this.form.onSubmit()}>
                     <Icon
-                      name="save"
-                      size="big"
-                      color="blue"
+                      name={saveSVG}
+                      className="circled"
+                      size="36px"
                       title={this.props.intl.formatMessage(messages.save)}
                     />
-                  </a>
-                  <a className="item" onClick={() => this.onCancel()}>
+                  </button>
+                  <button className="cancel" onClick={() => this.onCancel()}>
                     <Icon
-                      name="close"
-                      size="big"
-                      color="red"
+                      name={clearSVG}
+                      className="circled"
+                      size="36px"
                       title={this.props.intl.formatMessage(messages.cancel)}
                     />
-                  </a>
+                  </button>
                 </div>
               }
             />

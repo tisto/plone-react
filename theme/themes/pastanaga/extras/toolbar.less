@@ -141,8 +141,14 @@ svg.icon {
     padding: 0 20px;
     transition: opacity 0.1s 0.2s;
 
-    .edit {
+    .edit,
+    .save,
+    .contents {
       color: @teal-blue;
+    }
+
+    .cancel {
+      color: @darkHotPink;
     }
 
     .more {
@@ -436,6 +442,10 @@ svg.icon {
   li {
     // height: 38px;
     display: flex;
+
+    a {
+      width: 100%;
+    }
 
     button {
       font-family: Poppins;

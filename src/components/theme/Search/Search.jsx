@@ -157,7 +157,11 @@ export class SearchComponent extends Component {
           </article>
         </div>
         <Portal node={__CLIENT__ && document.getElementById('toolbar')}>
-          <Toolbar pathname={this.props.pathname} inner={<span />} />
+          <Toolbar
+            pathname={this.props.pathname}
+            hideDefaultViewButtons
+            inner={<span />}
+          />
         </Portal>{' '}
       </div>
     );
