@@ -84,3 +84,5 @@ export Workflow from './manage/Workflow/Workflow';
 
 export EditTitleTile from './manage/Tiles/Title/Edit';
 export EditTextTile from './manage/Tiles/Text/Edit';
+
+export HomeView from './theme/HomeView/HomeView';

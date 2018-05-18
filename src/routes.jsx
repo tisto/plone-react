@@ -28,6 +28,7 @@ import {
   PersonalPreferences,
   Search,
   Sharing,
+  HomeView,
 } from './components';
 
 /**
@@ -45,7 +46,7 @@ export default () => (
       }
     }}
   >
-    <IndexRoute component={View} />
+    <IndexRoute component={HomeView} />
     <Route path="/login" component={Login} />
     <Route path="/logout" component={Logout} />
     <Route path="/search" component={Search} />

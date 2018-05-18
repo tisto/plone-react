@@ -29,7 +29,7 @@ const DocumentView = ({ content }) => (
       />
     )}
     {content.text && (
-      <p dangerouslySetInnerHTML={{ __html: content.text.data }} />
+      <p dangerouslySetInnerHTML={{ __html: content.text.data.toString() }} />
     )}
   </div>
 );
