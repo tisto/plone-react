@@ -46,6 +46,19 @@ export default class Anontools extends Component {
     },
   };
 
+  getReturnURL = () => {
+    const returnURL = this.props.content['@id'].replace(config.apiPath, '');
+    if (this.props.content) {
+      if (returnURL === '/front-page') {
+        return '?return_url=/';
+      }
+
+      return `?return_url=${returnURL}`;
+    }
+
+    return '';
+  };
+
   /**
    * Render method.
    * @method render
@@ -55,17 +68,7 @@ export default class Anontools extends Component {
     return (
       !this.props.token && (
         <List floated="right" horizontal>
-          <Link
-            className="item"
-            to={`/login${
-              this.props.content
-                ? `?return_url=${this.props.content['@id'].replace(
-                    config.apiPath,
-                    '',
-                  )}`
-                : ''
-            }`}
-          >
+          <Link className="item" to={`/login${this.getReturnURL()}`}>
             <FormattedMessage id="Log in" defaultMessage="Log in" />
           </Link>
           <Link className="item" to="/register">
