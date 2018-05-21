@@ -166,7 +166,7 @@ export default class HomeView extends Component {
                     <Icon name="folder open" size="big" title="contents" />
                   </Link>
                 )}
-                {this.props.content && <Types pathname={path} />}
+                {this.props.content && <Types pathname={this.props.pathname} />}
 
                 <Dropdown
                   id="toolbar-more"
