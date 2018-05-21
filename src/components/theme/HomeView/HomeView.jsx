@@ -100,8 +100,8 @@ export default class HomeView extends Component {
    */
   componentWillReceiveProps(nextProps) {
     if (nextProps.pathname !== this.props.pathname) {
-      this.props.listActions(`${this.props.pathname}front-page`);
-      this.props.getContent(`${this.props.pathname}front-page`);
+      this.props.listActions(nextProps.pathname);
+      this.props.getContent(nextProps.pathname);
     }
 
     if (nextProps.actions.object_buttons) {
