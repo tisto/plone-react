@@ -124,9 +124,10 @@ module.exports = {
                 quality: 65,
               },
               // Specifying webp here will create a WEBP version of your JPG/PNG images
-              webp: {
-                quality: 75,
-              },
+              // Victor: Removed, this was ruining the png images on non Chrome browsers!!
+              // webp: {
+              //   quality: 75,
+              // },
             },
           },
         ],
